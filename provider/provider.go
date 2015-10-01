@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"log"
 	"strings"
 
 	"github.com/roboll/autoscale"
@@ -17,18 +16,15 @@ func InstanceHostnames(p autoscale.Provider, group string, publicIP bool) (map[s
 		group = *grp
 	}
 
-	log.Println("group was passed in, getting members")
 	instances, err := p.GetInstancesInGroup(&group)
 	if err != nil {
 		return nil, err
 	}
-	log.Println("now getting ips")
 	ips, err := p.GetInstanceIPs(instances, publicIP)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("finally... mapping hostnames")
 	output := map[string]string{}
 	for _, ip := range *ips {
 		output[ipToHostname(ip)] = ip

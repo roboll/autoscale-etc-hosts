@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 
@@ -84,13 +83,11 @@ func DoCreate(p autoscale.Provider, group string, domain string, toStdout bool, 
 	if err != nil {
 		return fmt.Errorf("Failed to get hosts for group. %s", err)
 	}
-	log.Println("got the hostnames and ips")
 
 	output := bytes.Buffer{}
 	output.WriteString(start + "\n")
 	for hostname, ip := range hosts {
 		output.WriteString(fmt.Sprintf("%s %s.%s\n", ip, hostname, domain))
-		log.Printf("wrote this string: %s", fmt.Sprintf("%s %s.%s\n", ip, hostname, domain))
 	}
 	output.WriteString(end + "\n")
 
@@ -99,13 +96,11 @@ func DoCreate(p autoscale.Provider, group string, domain string, toStdout bool, 
 	} else {
 		var file *os.File
 		if _, err := os.Stat(filename); os.IsNotExist(err) {
-			log.Println("thinking i should create the file")
 			file, err = os.Create(filename)
 			if err != nil {
 				return err
 			}
 		} else {
-			log.Println("naw, dont create, use an existing file")
 			file, err = os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, os.ModePerm)
 			if err != nil {
 				return err
