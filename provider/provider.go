@@ -8,17 +8,17 @@ import (
 )
 
 //AWSInstanceHostnames maps hostnames to ips.
-func InstanceHostnames(p autoscale.Provider, group *string, publicIP bool) (map[string]string, error) {
-	if group == nil {
+func InstanceHostnames(p autoscale.Provider, group string, publicIP bool) (map[string]string, error) {
+	if len(group) == 0 {
 		grp, err := p.GetLocalInstanceAutoscaleGroup()
 		if err != nil {
 			return nil, err
 		}
-		group = grp
+		group = *grp
 	}
 
 	log.Println("group was passed in, getting members")
-	instances, err := p.GetInstancesInGroup(group)
+	instances, err := p.GetInstancesInGroup(&group)
 	if err != nil {
 		return nil, err
 	}

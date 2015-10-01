@@ -80,7 +80,7 @@ func DoCreate(p autoscale.Provider, group string, domain string, toStdout bool, 
 		}
 	}
 
-	hosts, err := provider.InstanceHostnames(p, &group, publicIP)
+	hosts, err := provider.InstanceHostnames(p, group, publicIP)
 	if err != nil {
 		return fmt.Errorf("Failed to get hosts for group. %s", err)
 	}
