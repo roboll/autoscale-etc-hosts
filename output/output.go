@@ -15,7 +15,7 @@ import (
 const (
 	start    = "# --begin autoscale-etc-hosts output--"
 	end      = "# --end autoscale-etc-hosts output--"
-	filename = "hosts"
+	filename = "/etc/hosts"
 )
 
 //DoRemove removes entries originally created by this tool, as marked by the begin and end delimiters.
