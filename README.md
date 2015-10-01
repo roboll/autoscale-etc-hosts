@@ -10,7 +10,7 @@ When using autoscale infrastructure, ips are unpredictable. With custom hostname
 
 ## Support
 
-Currently supports AWS. Extending to other providers should be a trivial task; see `autoscale.Provider`. Pull requests welcome.
+Currently supports AWS. Extending to other providers should be a trivial task; see `provider.Provider`. Pull requests welcome.
 
 ### AWS
 
