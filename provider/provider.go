@@ -34,5 +34,5 @@ func InstanceHostnames(p autoscale.Provider, group string, publicIP bool) (map[s
 }
 
 func ipToHostname(ip string) string {
-	return strings.Replace(ip, ".", "-", -1)
+	return "ip-" + strings.Replace(ip, ".", "-", -1)
 }
