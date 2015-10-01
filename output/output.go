@@ -8,13 +8,14 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/roboll/autoscale"
 	"github.com/roboll/autoscale-etc-hosts/provider"
 )
 
 const (
 	start    = "# --begin autoscale-etc-hosts output--"
 	end      = "# --end autoscale-etc-hosts output--"
-	filename = "/etc/hosts"
+	filename = "hosts"
 )
 
 //DoRemove removes entries originally created by this tool, as marked by the begin and end delimiters.
@@ -70,7 +71,7 @@ func DoRemove() error {
 }
 
 //DoCreate creates entries associated with the group and provider.
-func DoCreate(p provider.Provider, group string, domain string, toStdout bool) error {
+func DoCreate(p autoscale.Provider, group string, domain string, toStdout bool, publicIP bool) error {
 	if len(domain) == 0 {
 		var err error
 		domain, err = getDomain()
@@ -79,7 +80,7 @@ func DoCreate(p provider.Provider, group string, domain string, toStdout bool) e
 		}
 	}
 
-	hosts, err := p.GetInstanceMap(&group)
+	hosts, err := provider.InstanceHostnames(p, &group, publicIP)
 	if err != nil {
 		return fmt.Errorf("Failed to get hosts for group. %s", err)
 	}

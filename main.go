@@ -4,23 +4,23 @@ import (
 	"flag"
 	"log"
 
+	"github.com/roboll/autoscale"
 	"github.com/roboll/autoscale-etc-hosts/output"
-	"github.com/roboll/autoscale-etc-hosts/provider"
 )
-
-var config provider.Config
 
 var providerName string
 var groupName string
 var domain string
 
+var region string
+var usePublicIP bool
+
 var remove bool
 var toStdout bool
 
 func init() {
-	config = provider.Config{}
-	flag.StringVar(&config.Region, "region", "", "cloud region; defaults to this instance region, if possible")
-	flag.BoolVar(&config.UsePublicIP, "use-public-ip", false, "use public ip: default false")
+	flag.StringVar(&region, "region", "", "cloud region; defaults to this instance region, if possible")
+	flag.BoolVar(&usePublicIP, "use-public-ip", false, "use public ip: default false")
 
 	flag.StringVar(&providerName, "provider", "", "cloud provider")
 	flag.StringVar(&groupName, "group", "", "autoscale group name; defaults to this instance autoscale group, if possible")
@@ -39,16 +39,20 @@ func main() {
 			log.Fatal(err)
 		}
 	} else {
-		var p provider.Provider
+		var p autoscale.Provider
 		switch providerName {
 		case "aws":
-			p = &provider.AWS{
-				Config: &config,
+			if region != "" {
+				p = &autoscale.AWS{
+					Region: &region,
+				}
+			} else {
+				p = &autoscale.AWS{}
 			}
 		default:
 			log.Fatal("Must specify a valid provider(aws).")
 		}
-		err := output.DoCreate(p, groupName, domain, toStdout)
+		err := output.DoCreate(p, groupName, domain, toStdout, usePublicIP)
 		if err != nil {
 			log.Fatal(err)
 		}
